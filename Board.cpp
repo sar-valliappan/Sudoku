@@ -13,7 +13,26 @@ class Board {
         Board() = default;
 
         Board(const std::array<std::array<int, 9>, 9>& initial)
-            : board(initial) {}
+            : board(initial) {
+                initializeBitmaps();
+        }
+
+        void initializeBitmaps() {
+            rowBitMap.fill(0);
+            colBitMap.fill(0);
+            boxBitMap.fill(0);
+
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    int value = board[r][c];
+                    if (value == 0) continue;
+                    int bit = 1 << (value - 1);
+                    rowBitMap[r] |= bit;
+                    colBitMap[c] |= bit;
+                    boxBitMap[(r/3)*3 + (c/3)] |= bit;
+                }
+            }
+        }
 
         void printBoard() const {
             for (int i = 0; i < 9; i++) {
@@ -74,6 +93,14 @@ class Board {
             int boxIndex = (row / 3) * 3 + (col / 3);
             boxBitMap[boxIndex] |= bit;
             return true;
+        }
+
+        void removeValue(int row, int col, int value) {
+            int bit = 1 << (value - 1);
+            board[row][col] = 0;
+            rowBitMap[row] &= ~bit;
+            colBitMap[col] &= ~bit;
+            boxBitMap[(row/3)*3 + (col/3)] &= ~bit;
         }
 
         void print() const {
