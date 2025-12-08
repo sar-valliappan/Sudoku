@@ -95,6 +95,8 @@ void Board::removeValue(int row, int col, int value) {
 
 bool Board::solveBoard(int row, int col) {
     if (row == 9) return true;
+    if (col == 9) return solveBoard(row + 1, 0);
+    
     if (board[row][col] != 0) return solveBoard(row, col + 1);
     for (int value = 1; value <= 9; value++) {
         if (isValidMove(row, col, value)) {
